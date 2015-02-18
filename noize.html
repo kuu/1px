@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style type="text/css">
+    body {padding: 0; margin: 0;}
+  </style>
+</head>
+<body>
+
+  <p>TV white noise demo:</p>
+  <div id="container"></div>
+
+  <script>
+
+  'use strict';
+
+  function _createHTMLCanvas(pWidth, pHeight) {
+    var tCanvas = document.createElement('canvas');
+    tCanvas.width = Math.ceil(pWidth);
+    tCanvas.height = Math.ceil(pHeight);
+    tCanvas.style.webkitTransform = 'translateZ(0)';
+
+    var tContext = tCanvas.getContext('2d');
+
+    if ('imageSmoothingEnabled' in tContext) {
+      tContext.imageSmoothingEnabled = false;
+    } else if ('webkitImageSmoothingEnabled' in tContext) {
+      tContext.webkitImageSmoothingEnabled = false;
+    }else {
+      tContext.mozImageSmoothingEnabled = false;
+    }
+    return tCanvas;
+  }
+
+  var img, canvas, ctx,
+      WIDTH = 344, HEIGHT = 258; // should be larger than 256x256
+
+  var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                              window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+  window.requestAnimationFrame = requestAnimationFrame;
+
+  img = new Image();
+  img.src = 'blue.png';
+  img.addEventListener('load', function () {
+    canvas = _createHTMLCanvas(WIDTH, HEIGHT);
+    document.getElementById('container').appendChild(canvas);
+    //img = document.getElementById('texture');
+    ctx = canvas.getContext('2d');
+
+    var step = function () {
+      interpolateRnadom(ctx, img);
+      requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, false);
+
+  function interpolateRnadom(ctx, img) {
+    if (Math.floor(Math.random() * 10) + 1 === 10) {
+      ctx.setTransform(1, 0, 0, 1, 0, 0.5); // moving 0.5px in Y direction
+    } else {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+    }
+    ctx.drawImage(img, 0, 0, WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT);
+  }
+
+</script>
+
+</body>
+</html>
+
