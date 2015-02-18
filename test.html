@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style type="text/css">
+    body {padding: 0; margin: 0;}
+  </style>
+</head>
+<body>
+
+  <p>Image to use:</p>
+  <img id="texture" src="blue.png" alt="The texture" />
+
+  <p>Canvas (translated by 0.5px):</p>
+  <div id="container"></div>
+
+  <script>
+
+  'use strict';
+
+  function _createHTMLCanvas(pWidth, pHeight) {
+    var tCanvas = document.createElement('canvas');
+    tCanvas.width = Math.ceil(pWidth);
+    tCanvas.height = Math.ceil(pHeight);
+    tCanvas.style.webkitTransform = 'translateZ(0)';
+
+    var tContext = tCanvas.getContext('2d');
+
+    if ('imageSmoothingEnabled' in tContext) {
+      tContext.imageSmoothingEnabled = false;
+    } else if ('webkitImageSmoothingEnabled' in tContext) {
+      tContext.webkitImageSmoothingEnabled = false;
+    }else {
+      tContext.mozImageSmoothingEnabled = false;
+    }
+    return tCanvas;
+  }
+
+  var img, canvas, ctx,
+      WIDTH = 344, HEIGHT = 258; // should be larger than 256x256
+
+  window.onload = function () {
+    canvas = _createHTMLCanvas(WIDTH, HEIGHT);
+    document.getElementById('container').appendChild(canvas);
+    img = document.getElementById('texture');
+    ctx = canvas.getContext('2d');
+    ctx.setTransform(1, 0, 0, 1, 0, 0.5); // moving 0.5px in Y direction
+    ctx.drawImage(img, 0, 0, WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT);
+  };
+
+</script>
+
+</body>
+</html>
+
